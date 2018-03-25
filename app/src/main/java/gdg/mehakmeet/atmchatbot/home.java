@@ -12,14 +12,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.irozon.sneaker.Sneaker;
 import com.simmorsal.recolor_project.ReColor;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import gdg.mehakmeet.atmchatbot.API.api;
 import gdg.mehakmeet.atmchatbot.adapter.Adapter;
 import gdg.mehakmeet.atmchatbot.model.chat_show;
+import gdg.mehakmeet.atmchatbot.model.data;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -33,6 +43,7 @@ public class home extends Fragment {
     String my_message,reply;
     ImageView send;
 
+    Retrofit retrofit;
     public home() {
         // Required empty public constructor
     }
@@ -52,6 +63,7 @@ public class home extends Fragment {
         cAdapter=new Adapter(getActivity(),mainList);
         rv.setAdapter(cAdapter);
         initalize_rv();
+
 
         send.setOnClickListener(new View.OnClickListener() {
 
@@ -101,6 +113,7 @@ public class home extends Fragment {
         if (my_message.toLowerCase().trim().compareTo("suggest") == 0) {
             Log.i("WUT","YESA");
             reply = "Here are some Suggestions";
+            getAnime();
             chat_show my_data = new chat_show(my_message, 0,0);
             mainList.add(my_data);
 
@@ -137,6 +150,29 @@ public class home extends Fragment {
         }
         message.setText("");
 
+    }
+
+    private void getAnime() {
+        Log.i("ddd","hmm");
+        retrofit=new Retrofit.Builder()
+                .baseUrl(api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api api_create=retrofit.create(api.class);
+        Call<JsonObject> call = api_create.getData();
+
+       call.enqueue(new Callback<JsonObject>() {
+           @Override
+           public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+               Log.i("RESPONSE", String.valueOf(response.body()));
+           }
+
+           @Override
+           public void onFailure(Call<JsonObject> call, Throwable t) {
+
+           }
+       });
     }
 
 }

@@ -35,6 +35,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:cardview-v7:26.1.0'
 
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+
     compile "com.github.biodunalfet:SlidingSquaresLoader:1.0"
     compile 'com.github.vlad1m1r990:Lemniscate:1.4.2'
     implementation 'com.simmorsal.recolor:recolor:1.1.0'
