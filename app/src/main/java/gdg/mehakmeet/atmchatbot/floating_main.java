@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.andexert.library.RippleView;
 import com.simmorsal.recolor_project.ReColor;
 
 import gdg.mehakmeet.atmchatbot.adapter.fdAdapter;
@@ -29,9 +28,8 @@ public class floating_main extends Fragment {
     RecyclerView rv;
     LinearLayout ll;
     fdAdapter cAdapter;
-    RippleView ripple;
 
-    int prev_pos=0;
+    public static int prev_pos=0;
     public floating_main() {
         // Required empty public constructor
     }
@@ -54,19 +52,9 @@ public class floating_main extends Fragment {
        rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity().getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
            @Override
            public void onItemClick(View view, final int position) {
-              // View v2=view.inflater.inflate(R.layout.fd_items,container,false);
-             //  View v2=getActivity().getLayoutInflater().inflate()
-               //ripple=v2.findViewById(R.id.ripple_fd_items);
+
 
                Log.i("HM2M","WELLLL2222");
-
-            /* ripple.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
-                 @Override
-                 public void onComplete(RippleView rippleView) {
-                     Log.i("HMM","WELLLL");
-                 }
-             });*/
-
             switch (position){
                 case 0:{
                         if(!(prev_pos==position)){
@@ -97,7 +85,6 @@ public class floating_main extends Fragment {
 
            }
        }));
-
 
         return v;
     }

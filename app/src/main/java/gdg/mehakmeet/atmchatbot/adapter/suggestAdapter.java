@@ -6,17 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import gdg.mehakmeet.atmchatbot.R;
+import gdg.mehakmeet.atmchatbot.model.data;
 
 /**
  * Created by MEHAKMEET on 12-03-2018.
  */
 
 public class suggestAdapter extends RecyclerView.Adapter<suggestAdapter.ViewHolder> {
-    private final String[] ex;
+    private final ArrayList<data> detailList;
 
-    suggestAdapter(String[] ex) {
-        this.ex=ex;
+    suggestAdapter(ArrayList<data> detailList) {
+        this.detailList=detailList;
     }
 
     @Override
@@ -30,12 +33,15 @@ public class suggestAdapter extends RecyclerView.Adapter<suggestAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.item_name.setText(ex[position]);
+        holder.item_name.setText(detailList.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return ex.length;
+        if(detailList==null){
+            return 0;
+        }
+        return detailList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

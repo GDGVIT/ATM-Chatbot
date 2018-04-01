@@ -12,14 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.irozon.sneaker.Sneaker;
 import com.simmorsal.recolor_project.ReColor;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import gdg.mehakmeet.atmchatbot.API.api;
 import gdg.mehakmeet.atmchatbot.adapter.Adapter;
@@ -42,7 +43,9 @@ public class home extends Fragment {
     ArrayList<chat_show> mainList;
     String my_message,reply;
     ImageView send;
+    View v;
 
+    ArrayList<data> detailList;
     Retrofit retrofit;
     public home() {
         // Required empty public constructor
@@ -53,17 +56,19 @@ public class home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.fragment_home, container, false);
+        if(v==null) {
+            v = inflater.inflate(R.layout.fragment_home, container, false);
+        }
         rv=v.findViewById(R.id.recycler_chat);
         send=v.findViewById(R.id.send_message);
         message=v.findViewById(R.id.et_chat);
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         mainList=new ArrayList<>();
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        cAdapter=new Adapter(getActivity(),mainList);
+        cAdapter=new Adapter(getActivity(),mainList, detailList);
         rv.setAdapter(cAdapter);
         initalize_rv();
-
+        detailList=new ArrayList<>();
 
         send.setOnClickListener(new View.OnClickListener() {
 
@@ -101,7 +106,7 @@ public class home extends Fragment {
                 " \"Suggest\" for suggestion\n \"Hi\" for My response...(._.)";
         chat_show my_data = new chat_show(reply, 1,0);
         mainList.add(my_data);
-        cAdapter = new Adapter(getActivity(),mainList);
+        cAdapter = new Adapter(getActivity(),mainList,detailList);
         rv.setAdapter(cAdapter);
         rv.scrollToPosition(cAdapter.getItemCount() - 1);
 
@@ -113,17 +118,11 @@ public class home extends Fragment {
         if (my_message.toLowerCase().trim().compareTo("suggest") == 0) {
             Log.i("WUT","YESA");
             reply = "Here are some Suggestions";
-            getAnime();
             chat_show my_data = new chat_show(my_message, 0,0);
             mainList.add(my_data);
-
-            cAdapter.notifyItemInserted(mainList.size() - 1);
-            rv.scrollToPosition(cAdapter.getItemCount() - 1);
-            chat_show reply_data = new chat_show(reply, 1,1);
-            mainList.add(reply_data);
             cAdapter.notifyItemInserted(mainList.size()-1);
+            getAnime();
 
-            rv.scrollToPosition(cAdapter.getItemCount() - 1);
 
 
         }
@@ -166,6 +165,33 @@ public class home extends Fragment {
            @Override
            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                Log.i("RESPONSE", String.valueOf(response.body()));
+               try {
+                   JSONObject jobj=new JSONObject(response.body().toString());
+                   String title_name=jobj.getString("title");
+                   Log.i("NAME",title_name);
+                   String synop=jobj.getString("synopsis");
+                   String image=jobj.getString("image");
+                   data new_data=new data();
+                   new_data.setTitle(title_name);
+                   new_data.setImage(image);
+                   new_data.setSynopsis(synop);
+                   detailList=new ArrayList<>();
+                   detailList.add(new_data);
+                   rv.scrollToPosition(cAdapter.getItemCount() - 1);
+                   chat_show reply_data = new chat_show(reply, 1,1);
+                   mainList.add(reply_data);
+                   cAdapter.notifyItemInserted(mainList.size()-1);
+                   cAdapter=new Adapter(getActivity(),mainList,detailList);
+                   //cAdapter.notifyItemInserted(mainList.size()-1);
+                   rv.setAdapter(cAdapter);
+
+                   rv.scrollToPosition(cAdapter.getItemCount() - 1);
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
+
+
            }
 
            @Override

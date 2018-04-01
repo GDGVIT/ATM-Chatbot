@@ -1,18 +1,24 @@
 package gdg.mehakmeet.atmchatbot.adapter;
 
 import android.app.Activity;
-import android.support.v7.widget.GridLayoutManager;
+import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import gdg.mehakmeet.atmchatbot.R;
+import gdg.mehakmeet.atmchatbot.detail_page;
+import gdg.mehakmeet.atmchatbot.floating_main;
 import gdg.mehakmeet.atmchatbot.model.chat_show;
+import gdg.mehakmeet.atmchatbot.model.data;
+import gdg.mehakmeet.atmchatbot.ui.RecyclerItemClickListener;
 
 /**
  * Created by MEHAKMEET on 12-03-2018.
@@ -22,10 +28,12 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ONE = 0;
     private static final int TYPE_TWO = 1;
     private Activity activity;
+    private final ArrayList<data> detailList;
 
-    public Adapter(Activity activity, ArrayList<chat_show> mainList) {
+    public Adapter(Activity activity, ArrayList<chat_show> mainList, ArrayList<data> detailList) {
         this.mainList=mainList;
         this.activity=activity;
+        this.detailList=detailList;
 
     }
     @Override
@@ -81,15 +89,26 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if(data.getRv2()==1){
 
-            String[] ex={"Peaky Blinders","Code Geass","Goodfellas",
-                    "Peaky Blinders","Code Geass","Goodfellas",
-                    "Peaky Blinders","Code Geass","Goodfellas"};
-
-            suggestAdapter sa=new suggestAdapter(ex);
+            suggestAdapter sa=new suggestAdapter(detailList);
             holder.rv_suggest.setLayoutManager(new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false));
             holder.rv_suggest.setAdapter(sa);
 
         }
+        holder.rv_suggest.addOnItemTouchListener(new RecyclerItemClickListener(activity.getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+               // detail_page dp=new detail_page();
+               // FragmentTransaction ft=activity.getFragmentManager();
+                Toast.makeText(activity.getApplicationContext(),detailList.get(position).getTitle(),Toast.LENGTH_SHORT).show();
+                detail_page dp=new detail_page(detailList);
+                floating_main.prev_pos=-2;
+                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,R.anim.enter_from_left, R.anim.exit_to_right)
+                        .add(R.id.content_lay, dp)
+                        .addToBackStack(null)
+                        .commit();
+
+            }
+        }));
     }
 
     private void configureMyChatViewHolder(MyChatViewHolder holder, int position) {

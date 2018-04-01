@@ -7,4 +7,6 @@
     <color name="back_main">#f8f8f8</color>
     <color name="blue_shade">#3cb2e2</color>
     <color name="white">#ffffff</color>
+    <color name="final_text_color">#2f2f2f</color>
+    <color name="gear_in_ai">#FFCB57</color>
 </resources>

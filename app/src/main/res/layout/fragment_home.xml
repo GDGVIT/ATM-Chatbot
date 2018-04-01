@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/content_lay"
+    android:background="@color/back_main"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="gdg.mehakmeet.atmchatbot.home"
@@ -51,7 +52,8 @@
                 android:background="@drawable/border_card"
                 android:hint="@string/type_a_message"
                 android:maxHeight="108dp"
-                android:textSize="14.5sp" />
+                android:textSize="14.5sp"
+                android:layout_marginLeft="4dp" />
 
             <RelativeLayout
                 android:layout_width="0dp"
